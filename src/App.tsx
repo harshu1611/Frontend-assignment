@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Tooltip from 'react-tooltip';
 import './global.css'
 import { Switch } from '@headlessui/react'
 import { RadioGroup } from '@headlessui/react'
