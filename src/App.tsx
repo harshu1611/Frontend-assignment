@@ -59,6 +59,8 @@ const FormRenderer = () => {
           ...prevStates,
           [key]: value
         }))
+
+        return 0;
   }
   const handleRadioChange = (groupKey: string, value: any) => {
 
@@ -121,7 +123,7 @@ const FormRenderer = () => {
 <RadioGroup value={formData[group.jsonKey + '.'  +subP.jsonKey]} onChange={()=>{
   //  handleRadioChange( group.jsonKey + '.'  +subP.jsonKey,opt.value)
    handleFormData(group.jsonKey + '.'  +subP.jsonKey,opt.value)
-}} className="mt-2">
+}} className="mt-2" defaultChecked={subP.validate.defaultValue===opt.value} >
        
         <div className="flex flex-col justify-center w-full">
             <RadioGroup.Option
@@ -138,6 +140,7 @@ const FormRenderer = () => {
                 
               }
              defaultChecked={subP.validate.defaultValue===opt.value}
+             
             >
               <RadioGroup.Label as="span">{opt.label}</RadioGroup.Label>
             </RadioGroup.Option>
@@ -180,13 +183,13 @@ if(!radioStates){
 }
   return(
       <>
-     
+     <div className="flex flex-col justify-around items-stretch w-full">
 <RadioGroup value={radioStates[data.jsonKey]} onChange={()=>{
   //  handleRadioChange( data.jsonKey,opt.value)
    handleFormData(data.jsonKey,opt.value)
 }} className="mt-2">
        
-        <div className="flex flex-col justify-center w-full">
+        
             <RadioGroup.Option
               key={data.jsonKey}
               value={opt.value}
@@ -205,9 +208,9 @@ if(!radioStates){
               <RadioGroup.Label as="span">{opt.label}</RadioGroup.Label>
             </RadioGroup.Option>
         
-        </div>
+        
       </RadioGroup>
-
+      </div>
 {
   // console.log(radioStates)
 }
@@ -240,6 +243,7 @@ if(!radioStates){
                   id={data.jsonKey}
                   name=""
                   key={data.jsonKey}
+
                   className="mt-2 block w-80 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   defaultValue={data.validate.defaultValue}
                   // onChange={(e:any)=>{handleFormData(data.jsonKey,e.target.value)}}
@@ -330,8 +334,16 @@ onChange={(e:any)=>{
                   })
                 )
                 :
-               <>
-               </>
+                (formData[subP.conditions[0].jsonKey]!==subP.conditions[0].value) ?
+                (
+                  subP.subParameters.map((nestedSubP:any)=>{
+                formData[nestedSubP.jsonKey]= null
+                  })
+                )
+                :
+                 <></>
+               
+              
                 
               )
               :
