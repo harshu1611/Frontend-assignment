@@ -18,3 +18,5 @@ Paste your JSON UI Schema and form will Render on Right.\
 Click on Submit button to send the form data to backend.\
 You can see the sent data on `Console` from `Inspect`. \
 To Clear the schema and form, click on Cancel Button.
+
+## To see the deployed app, visit- `https://truefoundry-frontend.onrender.com/`
