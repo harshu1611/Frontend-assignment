@@ -16,6 +16,9 @@ const FormRenderer = () => {
       // setFormFields(parsedSchema)
       setValidJson(true)
       setSchemaJson(parsedSchema)
+
+      const initialFormData = initializeFormData(parsedSchema);
+    setFormData(initialFormData);
     } catch (error) {
       console.error('Invalid JSON schema');
       setValidJson(false)
@@ -24,6 +27,24 @@ const FormRenderer = () => {
     console.log(schemaJson)
   }, [uiSchema]);
 
+  const initializeFormData = (schema:any) => {
+    const initialFormData = [{}];
+  
+    const traverseSchema = (node:any) => {
+      if (node.jsonKey && node.validate && node.validate.defaultValue) {
+        // Check if defaultValue exists and assign it to formData
+        initialFormData[node.jsonKey] = node.validate.defaultValue;
+      }
+  
+      if (node.subParameters) {
+        node.subParameters.forEach(traverseSchema);
+      }
+    };
+    schema.forEach(traverseSchema);
+    return initialFormData;
+  }
+  
+   
   const handleSchemaChange = (e:any) => {
     setUiSchema(e.target.value);
   };
@@ -32,6 +53,7 @@ const FormRenderer = () => {
 
   const [radioStates, setRadioStates] = useState<any>({});
   const [formData, setFormData] = useState<any>({});
+
   const handleFormData=(key:string,value:any)=>{
         setFormData((prevStates:any)=>({
           ...prevStates,
@@ -52,6 +74,9 @@ const FormRenderer = () => {
         <div className='flex flex-row justify-between items-center w-full p-2 bg-[#F5F5FF] rounded-xl'>
         <label htmlFor={data.jsonKey} className=" text-sm font-medium leading-6 text-gray-900">
       {data.label}
+      {data.validate && data.validate.required && (
+    <span className="text-red-500">*</span>
+  )}
     </label>
     <div className="mt-2">
       <input
@@ -76,6 +101,9 @@ const FormRenderer = () => {
       <>
       <label htmlFor={subP.jsonKey} className=" text-sm font-medium leading-6 text-gray-900">
 {subP.label}
+{subP.validate && subP.validate.required && (
+    <span className="text-red-500">*</span>
+  )}
 </label>
 <div className="mt-2 flex flex-row space-x-2 bg-[#F5F5FF] p-2">
 {subP.validate.options.map((opt:any)=>{
@@ -141,6 +169,9 @@ const FormRenderer = () => {
       <>
       <label htmlFor={data.jsonKey} className=" text-sm font-medium leading-6 text-gray-900">
 {data.label}
+{data.validate && data.validate.required && (
+    <span className="text-red-500">*</span>
+  )}
 </label>
 <div className="mt-2 flex flex-row space-x-2 bg-[#F5F5FF] p-2">
 {data.validate.options.map((opt:any)=>{
@@ -201,6 +232,9 @@ if(!radioStates){
         <div className='flex flex-row justify-between items-center w-full bg-[#F5F5FF] p-2'>
                 <label htmlFor={data.jsonKey} className=" text-sm font-medium leading-6 text-gray-900">
                  {data.label}
+                 {data.validate && data.validate.required && (
+    <span className="text-red-500">*</span>
+  )}
                 </label>
                 <select
                   id={data.jsonKey}
@@ -244,6 +278,9 @@ onChange={(e:any)=>{
 />
 <label htmlFor={data.jsonKey} className=" ml-2 text-sm font-medium leading-6 text-gray-900">
 {data.label}
+{data.validate && data.validate.required && (
+    <span className="text-red-500">*</span>
+  )}
 </label>
    </div>
     )
@@ -255,6 +292,9 @@ onChange={(e:any)=>{
       <div className='flex flex-col justify-between  w-full p-2 bg-[#F5F5FF] rounded-xl' key={group.jsonKey}>
         <label htmlFor={group.jsonKey} className=" ml-2 text-sm font-medium leading-6 text-gray-900">
 {group.label}
+{group.validate && group.validate.required && (
+    <span className="text-red-500">*</span>
+  )}
 </label>
 <div className='h-[1px] w-full bg-gray-400'></div>
         {
@@ -292,11 +332,8 @@ onChange={(e:any)=>{
                 :
                <>
                </>
-               
-                          
-               
+                
               )
-             
               :
                   subP.uiType==="Select" ? 
                  select(subP)
@@ -306,7 +343,6 @@ onChange={(e:any)=>{
                   switchFn(subP)
                   :
                   <></>
-           
             )
           })
         }
@@ -326,6 +362,7 @@ onChange={(e:any)=>{
         {
           uiSchema && validJson ?
           <div className='w-full p-4 flex flex-col space-y-4'>
+            
           {schemaJson.map((data:any)=>{
             return(
               data.validate.required && data.uiType==="Input" ? 
@@ -415,7 +452,9 @@ onChange={(e:any)=>{
       
     </div>
     <h1 className='text-s text-gray-500 text-end'>See Console for the sent Data</h1>
+   
         </div>
+        
            : 
            uiSchema && !validJson ?
            <div className='flex h-full w-full justify-center items-center'>
