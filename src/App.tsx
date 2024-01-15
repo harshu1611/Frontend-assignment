@@ -373,10 +373,13 @@ onChange={(e:any)=>{
         />
         {
           uiSchema && validJson ?
+          
           <div className='w-full p-4 flex flex-col space-y-4'>
-            
+           <form onSubmit={(e:any)=>e.preventDefault()}>
           {schemaJson.map((data:any)=>{
             return(
+          
+                
               data.validate.required && data.uiType==="Input" ? 
              input(data)
               :
@@ -454,7 +457,7 @@ onChange={(e:any)=>{
        Cancel
       </button>
       <button
-        type="button"
+        type="submit"
         className="rounded-lg bg-gray-500 px-2 py-1 text-s font-semibold text-white shadow-sm hover:bg-gray-600  border-2 border-gray-500" onClick={()=>{
           console.log((formData))
         }}
@@ -464,7 +467,7 @@ onChange={(e:any)=>{
       
     </div>
     <h1 className='text-s text-gray-500 text-end'>See Console for the sent Data</h1>
-   
+   </form>
         </div>
         
            : 
